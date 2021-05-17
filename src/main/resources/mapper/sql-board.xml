@@ -9,11 +9,11 @@
         board_idx,
         title,
         hit_cnt,
-        created_dtatetime
+        create_time
       from
         board
       where
-        delete_yn = 'N'
+        deleted_yn = 'N'
       order by board_idx DESC
     ]]>
 
