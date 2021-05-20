@@ -2,6 +2,8 @@ package board.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,9 +16,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import board.dto.BoardDto;
 import board.service.BoardService;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
 public class BoardController {
+  //private Logger log = LoggerFactory.getLogger(this.getClass());
+  
   @Autowired
   private BoardService boardService;
 
@@ -34,6 +40,7 @@ public class BoardController {
   @RequestMapping(value="/board/List")
   public String BoardList(Model model) throws Exception {
 
+    log.debug("BoardList");
     List<BoardDto> list = boardService.selectBoardList();
 	  model.addAttribute("list", list);
 	  // for(int i=0; i< list.size(); i++) {
