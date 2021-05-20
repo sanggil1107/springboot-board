@@ -6,10 +6,7 @@
   <select id="selectBoardList" resultType="board.dto.BoardDto">
     <![CDATA[ 
       select
-        board_idx,
-        title,
-        hit_cnt,
-        create_time
+        board_idx, title, hit_cnt, create_time
       from
         board
       where
@@ -18,4 +15,67 @@
     ]]>
 
   </select>
+
+  <insert id="insertBoard" parameterType="board.dto.BoardDto">
+    <![CDATA[ 
+      insert into board
+      (
+        title,
+        contents,
+        create_time,
+        creator_id
+      )
+      value
+      (
+        #{title},
+        #{contents},
+        NOW(),
+        'admin'
+      )
+    ]]>
+  </insert>
+  <update id="updateHitCount" parameterType="int">
+    <![CDATA[ 
+      update
+        board
+      set
+        hit_cnt = hit_cnt + 1
+      where
+        board_idx = #{boardIdx}
+    ]]>
+  </update>
+  <select id="selectBoardDetail" parameterType="int" resultType="board.dto.BoardDto">
+    <![CDATA[ 
+      select
+        board_idx, title, contents, hit_cnt, creator_id, create_time
+      from
+        board
+      where board_idx = ${boardIdx} and deleted_yn = 'N'
+    ]]>
+  </select>
+  <update id="updateBoard" parameterType="board.dto.BoardDto">
+    <![CDATA[ 
+      update
+        board
+      set
+        title = #{title},
+        contents = #{contents},
+        update_time = NOW(),
+        updater_id = 'admin'
+      where
+        board_idx = #{boardIdx}
+    ]]>
+  </update>
+  <delete id="deleteBoard">
+    <![CDATA[ 
+      update
+        board
+      set
+        deleted_yn = 'Y',
+        update_time = NOW(),
+        updater_id = 'admin'
+      where 
+        board_idx = #{boardIdx}
+    ]]>
+  </delete>
 </mapper>
