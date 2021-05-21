@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import board.dto.BoardDto;
 import board.mapper.BoardMapper;
@@ -19,7 +20,7 @@ public class BoardServiceImpl implements BoardService {
   }
 
   @Override
-  public void insertBoard(BoardDto boardDto) throws Exception {
+  public void insertBoard(BoardDto boardDto, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception {
     boardMapper.insertBoard(boardDto);
   }
 
