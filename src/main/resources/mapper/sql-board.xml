@@ -16,7 +16,7 @@
 
   </select>
 
-  <insert id="insertBoard" parameterType="board.dto.BoardDto">
+  <insert id="insertBoard" parameterType="board.dto.BoardDto" useGeneratedKeys="true" keyProperty="boardIdx">
     <![CDATA[ 
       insert into board
       (
@@ -78,4 +78,28 @@
         board_idx = #{boardIdx}
     ]]>
   </delete>
+  <insert id="insertBoardFileList" parameterType="board.dto.BoardFileDto">
+  	<![CDATA[
+  	  insert into tb_file
+  	  (
+  	  	board_idx,
+  	  	original_file_name,
+  	  	stored_file_path,
+  	  	file_size,
+  	  	creator_id,
+  	  	created_datetime
+  	  )
+  	  values
+  	]]>
+  	<foreach collection="list" item="item" separator=",">
+  	(
+  	  #{item.boardIdx},
+  	  #{item.originalFileName},
+  	  #{item.storedFilePath},
+  	  #{item.fileSize},
+  	  'admin',
+  	  NOW()
+  	)
+  	</foreach>
+  </insert>
 </mapper>
