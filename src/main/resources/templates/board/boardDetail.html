@@ -46,6 +46,9 @@
         </table>
         <input type="hidden" name="boardIdx" th:value="${boardDto.boardIdx}"/>
       </form>
+      <div class="file_list">
+        <a th:each="list : ${boardDto.fileList}" th:text="|${list.originalFileName}(${list.fileSize} kb)|"></a>
+      </div>
       <input type="button" id="list" value="목록으로">
       <input type="button" id="edit" value="수정하기">
       <input type="button" id="delete" value="삭제하기">

@@ -102,4 +102,17 @@
   	)
   	</foreach>
   </insert>
+  <select id="selectBoardFileList" parameterType="int" resultType="board.dto.BoardFileDto">
+    <![CDATA[ 
+      select
+        idx,
+        board_idx,
+        original_file_name,
+        format(round(file_size / 1024), 0) as file_size
+      from
+        tb_file
+      where
+        board_idx = #{boardidx} and deleted_yn = 'N'
+    ]]>
+  </select>
 </mapper>
