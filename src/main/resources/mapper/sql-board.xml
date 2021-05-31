@@ -112,7 +112,21 @@
       from
         tb_file
       where
-        board_idx = #{boardidx} and deleted_yn = 'N'
+        board_idx = #{boardIdx} and deleted_yn = 'N'
+    ]]>
+  </select>
+  <select id="selectBoardFileInformation" parameterType="map" resultType="board.dto.BoardFileDto">
+    <![CDATA[ 
+      select
+        original_file_name,
+        stored_file_path,
+        file_size
+      from
+        tb_file
+      where
+        idx = #{idx}
+        and board_idx = #{boardIdx}
+        and deleted_yn = 'N'
     ]]>
   </select>
 </mapper>
