@@ -7,88 +7,71 @@ import java.io.File;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.servlet.ModelAndView;
 
 import board.dto.BoardDto;
 import board.dto.BoardFileDto;
 import board.service.BoardService;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Controller
-public class BoardController {
-  //private Logger log = LoggerFactory.getLogger(this.getClass());
-  
+public class RestBoardController {
   @Autowired
   private BoardService boardService;
 
-  // @RequestMapping("/board/BoardList.do")
-  // public ModelAndView BoardList() throws Exception {
-  //   ModelAndView mv = new ModelAndView();
-
-  //   List<BoardDto> list = boardService.selectBoardList();
-  //   mv.setViewName("board/boardList");
-  //   mv.addObject("list", list);
-
-  //   return mv;
-  // }
-
-  @RequestMapping(value="/board/List")
+  // 게시판 목록
+  @RequestMapping(value = "/board", method = RequestMethod.GET)
   public String BoardList(Model model) throws Exception {
-
-    log.debug("BoardList");
     List<BoardDto> list = boardService.selectBoardList();
-	  model.addAttribute("list", list);
-	  // for(int i=0; i< list.size(); i++) {
-		//   System.out.println("boardIdx :" + list.get(i).getBoardIdx());
-	  // }
-	  return "board/boardList";
+    model.addAttribute("list", list);
+    
+    return "board/restboardList";
   }
 
-  @RequestMapping(value="/board/Write")
+  // 게시판 작성 화면
+  @RequestMapping(value = "/board/write", method = RequestMethod.GET)
   public String BoardWrite(Model model) throws Exception {
-    return "board/boardWrite";
+    return "board/restboardWrite";
   }
 
-  @RequestMapping(value="/board/Insert")
+  // 게시판 작성
+  @RequestMapping(value = "/board/write", method = RequestMethod.POST)
   public String InsertBoard(BoardDto boardDto, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception {
     boardService.insertBoard(boardDto, multipartHttpServletRequest);
-    return "redirect:/board/List";
+    return "redirect:/board";
   }
 
-  @RequestMapping(value="/board/Detail")
-  public String BoardDetail(Model model, @RequestParam int boardIdx) throws Exception {
+  // 게시판 상세 화면
+  @RequestMapping(value = "/board/{boardIdx}", method = RequestMethod.GET)
+  public String BoardDetail(Model model, @PathVariable("boardIdx") int boardIdx) throws Exception {
     BoardDto boardDto = boardService.selectBoardDetail(boardIdx);
     model.addAttribute("boardDto", boardDto);
-
-    return "board/boardDetail";
+    return "board/restboardDetail";
   }
 
-  @RequestMapping(value="/board/Update")
+  // 게시판 수정
+  @RequestMapping(value = "/board/{boardIdx}", method = RequestMethod.PUT)
   public String UpdateBoard(BoardDto boardDto) throws Exception {
     boardService.updateBoard(boardDto);
-    return "redirect:/board/List";
+    return "redirect:/board";
   }
 
-  @RequestMapping(value="/board/Delete")
-  public String DeleteBoard(int boardIdx) throws Exception {
+  // 게시판 삭제
+  @RequestMapping(value = "/board/{boardIdx}", method = RequestMethod.DELETE)
+  public String DeleteBoard(@PathVariable("boardIdx") int boardIdx) throws Exception {
     boardService.deleteBoard(boardIdx);
-    return "redirect:/board/List";
+    return "redirect:/board";
   }
 
-  @RequestMapping(value="/board/downloadBoardFile")
+  // 파일 다운로드
+  @RequestMapping(value = "/board/file", method = RequestMethod.GET)
   public void downloadBoardFile(@RequestParam int idx, @RequestParam int boardIdx, HttpServletResponse response) throws Exception {
     BoardFileDto boardFileDto = boardService.selectBoardFileInformation(idx, boardIdx);
     if(ObjectUtils.isEmpty(boardFileDto) == false) {
@@ -106,10 +89,12 @@ public class BoardController {
     }
   }
 
-  @RequestMapping(value="/board/deleteBoardFile")
+  // 파일 삭제
+  @RequestMapping(value = "/board/file", method = RequestMethod.DELETE)
   public String deleteBoardFile(@RequestParam int idx, @RequestParam int boardIdx) throws Exception {
     boardService.deleteBoardFile(idx, boardIdx);
 
-    return "redirect:/board/Detail?boardIdx="+boardIdx;
+    return "redirect:/board/"+boardIdx;
   }
+
 }

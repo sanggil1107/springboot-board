@@ -45,11 +45,14 @@
           </tbody>
         </table>
         <input type="hidden" name="boardIdx" th:value="${boardDto.boardIdx}"/>
+        <input type="hidden" id="method" name="_method"/>
       </form>
       <div class="file_list" th:each="list : ${boardDto.fileList}">
         <!--<a th:each="list : ${boardDto.fileList}" th:text="|${list.originalFileName}(${list.fileSize} kb)|"></a> -->
-        <a style="float: left;" th:href="@{/board/downloadBoardFile(idx=${list.idx}, boardIdx=${list.boardIdx})}" th:text="|${list.originalFileName}(${list.fileSize} kb)|"></a>
-        <input type="button" id="delete_file" th:value="파일삭제" th:onclick="|location.href='@{/board/deleteBoardFile(idx=${list.idx}, boardIdx=${list.boardIdx})}'|">
+        <a style="float: left;" th:href="@{/board/file(idx=${list.idx}, boardIdx=${list.boardIdx})}" th:text="|${list.originalFileName}(${list.fileSize} kb)|"></a>
+        <form th:method="delete" th:action="@{/board/file(idx=${list.idx}, boardIdx=${list.boardIdx})}">
+          <input type="submit" id="delete_file" th:value="파일삭제">
+        </form>
       </div>
       <input type="button" id="list" value="목록으로">
       <input type="button" id="edit" value="수정하기">
@@ -58,18 +61,20 @@
       <script type="text/javascript">
         $(document).ready(function() {
           $("#list").on("click", function() {
-            location.href = "List";
+            location.href = "/board/";
           });
 
           $("#edit").on("click", function() {
+            $("input:hidden[name=_method]").val("put");
             var frm = $("#frm")[0];
-            frm.action = "Update";
+            frm.action = "/board/"+$("input:hidden[name=boardIdx]").val();
             frm.submit();
           });
 
           $("#delete").on("click", function() {
+            $("input:hidden[name=_method]").val("delete");
             var frm = $("#frm")[0];
-            frm.action = "Delete";
+            frm.action = "/board/"+$("input:hidden[name=boardIdx]").val();
             frm.submit();
           });
         })

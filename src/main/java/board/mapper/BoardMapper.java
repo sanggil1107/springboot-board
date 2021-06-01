@@ -19,4 +19,5 @@ public interface BoardMapper {
   void insertBoardFileList(List<BoardFileDto> list) throws Exception;
   List<BoardFileDto> selectBoardFileList(int boardIdx) throws Exception;
   BoardFileDto selectBoardFileInformation(@Param("idx") int idx,  @Param("boardIdx") int boardIdx) throws Exception;
+  void deleteBoardFile(@Param("idx") int idx, @Param("boardIdx") int boardIdx) throws Exception;
 }

@@ -129,4 +129,17 @@
         and deleted_yn = 'N'
     ]]>
   </select>
+  <update id="deleteBoardFile" parameterType="map">
+    <![CDATA[ 
+      update
+        tb_file
+      set
+        deleted_yn = 'Y',
+        updated_datetime = NOW(),
+        updater_id = 'admin'
+      where
+        idx = #{idx}
+        and board_idx = #{boardIdx}
+    ]]>
+  </update>
 </mapper>
