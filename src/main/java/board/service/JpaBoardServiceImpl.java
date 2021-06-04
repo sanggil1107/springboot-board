@@ -22,11 +22,13 @@ public class JpaBoardServiceImpl implements JpaBoardService {
   @Autowired
   private FileUtils fileUtils;
 
+  // 게시판 목록
   @Override
   public List<BoardEntity> selectBoardList() throws Exception {
     return jpaBoardRepository.findAllByOrderByBoardIdxDesc();
   }
 
+  // 게시판 작성/수정
   @Override
   public void saveBoard(BoardEntity  boardEntity, MultipartHttpServletRequest multipartHttpServletRequest, int hitCnt) throws Exception {
     boardEntity.setCreatorId("admin");
@@ -38,6 +40,7 @@ public class JpaBoardServiceImpl implements JpaBoardService {
     jpaBoardRepository.save(boardEntity);
   }
 
+  // 게시판 상세 화면
   @Override
   public BoardEntity selectBoardDetail(int boardIdx) throws Exception {
     Optional<BoardEntity> optional = jpaBoardRepository.findById(boardIdx);
@@ -53,17 +56,20 @@ public class JpaBoardServiceImpl implements JpaBoardService {
     }
   }
 
+  // 게시판 삭제
   @Override
   public void deleteBoard(int boardIdx) throws Exception {
     jpaBoardRepository.deleteById(boardIdx);
   }
 
+  // 파일 다운로드
   @Override
   public BoardFileEntity selectBoardFileInformation(int idx, int boardIdx) throws Exception {
     BoardFileEntity boardFileEntity = jpaBoardRepository.findBoardFile(idx, boardIdx);
     return boardFileEntity;
   }
 
+  // 파일 삭제
   @Override
   public void deleteBoardFile(int idx, int boardIdx) throws Exception {
     jpaBoardRepository.deleteBoardFile(idx, boardIdx);
